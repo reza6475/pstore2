@@ -237,6 +237,8 @@ main {
 
 .productcart {
     display: flex;
+    /* justify-content: center;
+    align-items: center; */
     /* display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
     width: 60%;
@@ -245,20 +247,32 @@ main {
 
 }
 
+
+.productcart .cartitem .infobox {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+}
+
+
+
 .total {
     display: flex;
     justify-content: center;
     /* position: sticky; */
     flex-direction: column;
     width: 40%;
-    gap:30px;
+    gap: 30px;
     border: 1px solid blue;
     padding: 50px;
-    font-weight:bolder;
+    font-weight: bolder;
 }
 
 
-.total button{
+.total button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -268,15 +282,30 @@ main {
     border-radius: 5px;
     margin: auto;
 }
- .summery{
+
+.summery {
     display: flex;
-   flex-direction: column;
-   gap:30px;
- }
+    flex-direction: column;
+    gap: 30px;
+}
 
 .cartitem {
     display: flex;
+    width: 100%;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* width: 500%; */
+}
+
+
+.cartitem li.empty {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center;
+    align-items: center; */
+    /* text-align: center; */
 }
 
 .cartitem li {
@@ -285,7 +314,9 @@ main {
     padding: 30px;
     gap: 20px;
     justify-content: center;
-    flex-direction: column;
+    /* flex-direction: column; */
+    width: 100%;
+   
 }
 
 
@@ -360,6 +391,31 @@ main {
     transform: translateY(-5px);
 }
 
+.empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.imagebox {
+    display: flex;
+    width: 40%;
+}
+
+.imagebox img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+
+/* .infobox {
+    display: flex;
+    flex: 1;
+}
+ */
 
 footer {
     height: 100px;
@@ -382,4 +438,25 @@ footer {
 .footer li a {
     text-decoration: none;
 
+}
+
+
+.product-detail article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.product{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+
+.product h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    width: 100%;
 }

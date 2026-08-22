@@ -5,7 +5,10 @@ for (let product of products) {
     let article = document.createElement("article");
     let imageproduct = document.createElement("img");
     imageproduct.src = product.image;
-    article.appendChild(imageproduct);
+    let productlink=document.createElement("a");
+    productlink.href=`product.html?id=${product.id}`;
+    productlink.appendChild(imageproduct)
+    article.appendChild(productlink);
     let h3 = document.createElement("h3");
     h3.textContent = product.name;
     article.appendChild(h3);
