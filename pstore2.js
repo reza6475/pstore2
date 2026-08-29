@@ -53,15 +53,21 @@ main.addEventListener("click", function (event) {
 
 function createProductCard(product) {
     let article = document.createElement("article");
+    article.className="product-card";
     let imageproduct = document.createElement("img");
     imageproduct.src = product.image;
+    imageproduct.alt=product.name;
     let productlink = document.createElement("a");
     productlink.href = `product.html?id=${product.id}`;
     productlink.appendChild(imageproduct)
     article.appendChild(productlink);
     let h3 = document.createElement("h3");
     h3.textContent = product.name;
-    article.appendChild(h3);
+    let namelink=document.createElement("a");
+    namelink.className="namelink";
+    namelink.href=`product.html?id=${product.id}`;
+    namelink.appendChild(h3);
+    article.appendChild(namelink);
     let priceproduct = document.createElement("p");
     priceproduct.textContent = product.price.toLocaleString() + "    تومان";
     article.appendChild(priceproduct);

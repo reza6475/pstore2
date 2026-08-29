@@ -19,7 +19,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
         price: 45000000,
         stock: 10,
         image: "img/2.jpg",
-        isnew: true,
+        isnew: false,
         description: `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -63,7 +63,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
         price: 75000000,
         stock: 8,
         image: "img/5.jpg",
-        isnew: false,
+        isnew: true,
         isoffer: true,
         description: `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.

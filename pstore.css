@@ -505,3 +505,36 @@ footer {
     /* flex-direction: row !important;
     border: 5px solid red; */
 }
+
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-card button {
+    margin-top: auto;
+}
+
+
+
+.product-card h3 {
+    line-height: 1.5;
+    height: 3em;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+.namelink{
+    text-decoration: none;
+}
+
+
+.namelink:hover{
+    background: red;
+}
