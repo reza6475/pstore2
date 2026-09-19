@@ -1,11 +1,20 @@
-loadproducts();
+import {getproducts, cart, loadcart, savecart, checkstock} from "./pstoredata2.js";
+
+const products = await getproducts();
+
+// loadproducts();
 loadcart();
+const csrfToken = document.querySelector(
+    "[name=csrfmiddlewaretoken]"
+).value;
+
 const cartitem = document.querySelector(".cartitem");
 const registerbutton = document.querySelector(".registerorder");
 
 checkemptycart();
 let totalcart = document.querySelector(".totalcart");
 let totalcount = document.querySelector(".totalcount");
+
 for (let product of cart) {
     let li = document.createElement("li");
     let imagebox = document.createElement("div");
@@ -40,8 +49,7 @@ for (let product of cart) {
         decrease.style.display = "none";
         deletebutton.style.display = "block";
 
-    }
-    else {
+    } else {
         decrease.style.display = "block";
         deletebutton.style.display = "none";
     }
@@ -64,6 +72,7 @@ for (let product of cart) {
 showtotalpricecart();
 
 cartitem.addEventListener("click", function (event) {
+
     if (event.target.matches("BUTTON")) {
         let li = event.target.closest("li");
         if (event.target.classList.contains("increase")) {
@@ -90,8 +99,7 @@ cartitem.addEventListener("click", function (event) {
 
             let spancount = li.querySelector(".spancount");
             spancount.textContent = product.count;
-        }
-        else if (event.target.classList.contains("decrease")) {
+        } else if (event.target.classList.contains("decrease")) {
             let product = cart.find(item => item.id === Number(li.dataset.id))
             --product.count;
             savecart();
@@ -105,16 +113,16 @@ cartitem.addEventListener("click", function (event) {
             }
             let spancount = li.querySelector(".spancount");
             spancount.textContent = product.count;
-        }
-        else if (event.target.classList.contains("delete")) {
+        } else if (event.target.classList.contains("delete")) {
             let index = cart.findIndex(item => item.id === Number(li.dataset.id));
             if (index != -1) {
                 li.remove();
                 cart.splice(index, 1);
-                checkemptycart();
+                // checkemptycart();
             }
             savecart();
             showtotalpricecart();
+            checkemptycart();
 
         }
     }
@@ -130,8 +138,6 @@ function showtotalproduct(li, product) {
     let newspan = li.querySelector(".spantotal");
     newspan.textContent = total.toLocaleString() + "     تومان"
 }
-
-
 
 
 function totalpricecart() {
@@ -160,39 +166,93 @@ function totalcounter() {
 }
 
 
-
-registerbutton.addEventListener("click", function () {
-    if (cart.length === 0) {
-        // alert("سبد خرید شما خالی است");
-        registerbutton.disabled = true;
-        return;
-    }
-    for (let item of cart) {
-        let product = products.find(productitem => productitem.id === item.id);
-        if (!product) {
-            alert("محصول مورد نظر پیدا نشد");
-            return;
+registerbutton.addEventListener("click", async function () {
+    console.log("دکمه ثبت سفارش کلیک شد");
+    const cartdata = cart.map(item => {
+        return {
+            product_id: item.id,
+            quantity: item.count,
+        };
+    });
+    // if (cart.length === 0) {
+    //     // alert("سبد خرید شما خالی است");
+    //     registerbutton.disabled = true;
+    //     return;
+    // }
+    try {
+        const response = await fetch('/api/cart/', {
+            method: "POST",
+            headers: {
+                "content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify(cartdata)
+        });
+        const result = await response.json();
+        if (response.status === 201) {
+            console.log(result.message);
+            cart.length = 0;
+            localStorage.removeItem("cart");
+            cartitem.innerHTML = "";
+            checkemptycart();
+            showtotalpricecart();
+            alert("سفارش شما با شماره سفارش" + "     " + result.order_id + "با موفقیت ثبت گردید" + "   " + result.total_price.toLocaleString())
+        else
+            {
+                alert(result.message);
+            }
         }
-        if (product.stock < item.count) {
-            alert("عدم موجودی");
-            return;
-        }
+        // } else if (response.status === 400) {
+        //     console.log(result.message);
+        //     alert(result.message);
+        // } else if (response.status === 500) {
+        //     console.log(result.message);
+        //     alert(result.message);
+        //
+        // } else if (response.status === 409) {
+        //     console.log(result.message);
+        //     alert(result.message);
+        //
+        // } else if (response.status === 405) {
+        //     console.log(result.message);
+        //     alert(result.message);
+        //
+        // }
+    } catch (error) {
+        // console.log("عدم ارتباط با سرور");
+        console.error(error);
+        alert("عدم ارتباط با سرور");
+
     }
 
-    for (let item of cart) {
-        let product = products.find(productitem => productitem.id === item.id);
-        product.stock -= item.count;
-    }
-    saveproducts();
-    cartitem.innerHTML = "";
-    cart.length = 0;
-    savecart();
-    showtotalpricecart();
-    alert("ثبت سفارش با موفقیت انجام شد");
-    checkemptycart();
+
+    // console.log(data)
+
+    // for (let item of cart) {
+    //     let product = products.find(productitem => productitem.id === item.id);
+    //     if (!product) {
+    //         alert("محصول مورد نظر پیدا نشد");
+    //         return;
+    //     }
+    //     if (product.stock < item.count) {
+    //         alert("عدم موجودی");
+    //         return;
+    //     }
+    // }
+    //
+    // for (let item of cart) {
+    //     let product = products.find(productitem => productitem.id === item.id);
+    //     product.stock -= item.count;
+    // }
+    // saveproducts();
+    // cartitem.innerHTML = "";
+    // cart.length = 0;
+    // savecart();
+    // showtotalpricecart();
+    // alert("ثبت سفارش با موفقیت انجام شد");
+    // checkemptycart();
 
 })
-
 
 
 function checkemptycart() {
@@ -203,7 +263,7 @@ function checkemptycart() {
         emptymessage.textContent = "سبد خرید شما خالی است";
         li.appendChild(emptymessage);
         let store = document.createElement("a");
-        store.href = "pstore2.html";
+        store.href = "/";
         store.textContent = "صفحه محصولات";
         li.appendChild(store);
         cartitem.appendChild(li);
