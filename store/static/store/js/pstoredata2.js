@@ -38,20 +38,3 @@ export function loadcart() {
  export function checkstock(product, requestcount) {
     return product.stock >= requestcount
 }
-//
-//
-//
-// function saveproducts() {
-//     localStorage.setItem("products", JSON.stringify(products));
-// }
-//
-//
-//
-// function loadproducts() {
-//     let saveproduct = localStorage.getItem("products");
-//     if (saveproduct != null) {
-//         products = JSON.parse(saveproduct);
-//     }
-// }
-
-
