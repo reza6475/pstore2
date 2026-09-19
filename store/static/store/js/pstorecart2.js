@@ -118,7 +118,6 @@ cartitem.addEventListener("click", function (event) {
             if (index != -1) {
                 li.remove();
                 cart.splice(index, 1);
-                // checkemptycart();
             }
             savecart();
             showtotalpricecart();
@@ -174,11 +173,7 @@ registerbutton.addEventListener("click", async function () {
             quantity: item.count,
         };
     });
-    // if (cart.length === 0) {
-    //     // alert("سبد خرید شما خالی است");
-    //     registerbutton.disabled = true;
-    //     return;
-    // }
+
     try {
         const response = await fetch('/api/cart/', {
             method: "POST",
@@ -201,58 +196,13 @@ registerbutton.addEventListener("click", async function () {
             {
                 alert(result.message);
             }
-        }
-        // } else if (response.status === 400) {
-        //     console.log(result.message);
-        //     alert(result.message);
-        // } else if (response.status === 500) {
-        //     console.log(result.message);
-        //     alert(result.message);
-        //
-        // } else if (response.status === 409) {
-        //     console.log(result.message);
-        //     alert(result.message);
-        //
-        // } else if (response.status === 405) {
-        //     console.log(result.message);
-        //     alert(result.message);
-        //
-        // }
+
     } catch (error) {
         // console.log("عدم ارتباط با سرور");
         console.error(error);
         alert("عدم ارتباط با سرور");
 
     }
-
-
-    // console.log(data)
-
-    // for (let item of cart) {
-    //     let product = products.find(productitem => productitem.id === item.id);
-    //     if (!product) {
-    //         alert("محصول مورد نظر پیدا نشد");
-    //         return;
-    //     }
-    //     if (product.stock < item.count) {
-    //         alert("عدم موجودی");
-    //         return;
-    //     }
-    // }
-    //
-    // for (let item of cart) {
-    //     let product = products.find(productitem => productitem.id === item.id);
-    //     product.stock -= item.count;
-    // }
-    // saveproducts();
-    // cartitem.innerHTML = "";
-    // cart.length = 0;
-    // savecart();
-    // showtotalpricecart();
-    // alert("ثبت سفارش با موفقیت انجام شد");
-    // checkemptycart();
-
-})
 
 
 function checkemptycart() {
@@ -270,5 +220,4 @@ function checkemptycart() {
         registerbutton.disabled = true;
 
     }
-
 }
