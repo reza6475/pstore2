@@ -1,12 +1,20 @@
-loadproducts();
-loadcart();
+import {getproducts} from "./pstoredata2.js";
+const products = await getproducts();
+
+
+
+// loadproducts();
+// loadcart();
 const productdetail = document.querySelector(".product-detail");
-const params = new URLSearchParams(window.location.search);
-const productid = Number(params.get("id"));
-let product = products.find(item => item.id === productid);
+// const params = new URLSearchParams(window.location.search);
+// const productslug = params.get("slug");
+const pathParts = window.location.pathname.split("/");
+const productslug = pathParts[2];
+let product = products.find(item => item.slug === productslug);
 if (!product) {
     productdetail.textContent = "محصول پیدا نشد";
 }
+
 else {
     let article = document.createElement("article");
     article.className = "articlep";

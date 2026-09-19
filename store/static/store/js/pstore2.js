@@ -1,5 +1,10 @@
 
-loadproducts();
+import {getproducts,cart,savecart,loadcart} from "./pstoredata2.js";
+const products = await getproducts();
+    // console.log(products);
+
+
+// loadproducts();
 loadcart();
 const main = document.querySelector("main");
 const allproduct = document.querySelector(".all-product");
@@ -29,7 +34,7 @@ main.addEventListener("click", function (event) {
         let selectproduct = cart.find(productitem => product.id === productitem.id);
         if (selectproduct) {
             // ++selectproduct.count;
-            window.location.href = "pstorecart2.html";
+            window.location.href = "cart/";
             // alert("در سبد خرید وجود دارد جهت افزایش به سبد خرید مراجعه نمایید");
             return;
         }
@@ -58,14 +63,14 @@ function createProductCard(product) {
     imageproduct.src = product.image;
     imageproduct.alt=product.name;
     let productlink = document.createElement("a");
-    productlink.href = `product.html?id=${product.id}`;
+    productlink.href = `/product/${product.slug}/`;
     productlink.appendChild(imageproduct)
     article.appendChild(productlink);
     let h3 = document.createElement("h3");
     h3.textContent = product.name;
     let namelink=document.createElement("a");
     namelink.className="namelink";
-    namelink.href=`product.html?id=${product.id}`;
+    namelink.href=`/product/${product.slug}/`;
     namelink.appendChild(h3);
     article.appendChild(namelink);
     let priceproduct = document.createElement("p");

@@ -1,17 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="pstore.css">
+    <link rel="stylesheet" href="{%static 'store/css/pstore.css' %}">
     <title>Document</title>
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <a href="pstore2.html">لوگو</a>
+            <a href="/">لوگو</a>
         </div>
         <div class="search">
             <input type="text">
@@ -21,7 +22,7 @@
             <a href="">حساب کاربری</a>
         </div>
         <div class="cart">
-            <a href="pstorecart2.html">سبد خرید</a>
+            <a href="cart/">سبد خرید</a>
         </div>
     </header>
     <nav>
@@ -33,31 +34,30 @@
         </ul>
     </nav>
     <main>
-        <section class="product section">
-            <h2>محصولات</h2>
+        <section class="product">
+            <h2>سبد خرید</h2>
+            <div class="cartinfo">
+                <div class="productcart">
+                    <ul class="cartitem">
 
-            <div class="product-grid  all-product">
-                <!-- article ها توسط JavaScript ساخته می‌شوند -->
+                    </ul>
+                    
+                </div>
+                <div class="total">
+                    <div class="summery">
+                        <!-- محل قرار گرفتن مجموع کل سبد و تعداد اقلام -->
+                        <p class="totalcart"></p>
+                        <p class="totalcount"></p>
+                    </div>
+                    <div>
+                        <button class="registerorder">ثبت سفارش</button>
+                    </div>
+                </div>
             </div>
+
         </section>
 
-        <section class="newproduct section">
-            <h2>محصولات جدید</h2>
 
-            <div class="product-grid  new-product">
-                <!-- article ها توسط JavaScript ساخته می‌شوند -->
-                
-            </div>
-        </section>
-
-        <section class="offerproduct section">
-            <h2>محصولات پیشنهادی</h2>
-
-            <div class="product-grid  offer-product">
-                <!-- article ها توسط JavaScript ساخته می‌شوند -->
-
-            </div>
-        </section>
     </main>
     <footer>
         <ul class="footer">
@@ -67,8 +67,9 @@
             <li><a href="#">شبکه های اجتماعی</a></li>
         </ul>
     </footer>
-    <script src="pstoredata2.js"></script>
-    <script src="pstore2.js"></script>
+    {%csrf_token%}
+<!--    <script src="pstoredata2.js"></script>-->
+    <script  type="module" src="{% static 'store/js/pstorecart2.js'%}"></script>
 </body>
 
 </html>
