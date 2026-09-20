@@ -1,6 +1,7 @@
 
 import {getproducts,cart,savecart,loadcart} from "./pstoredata2.js";
 const products = await getproducts();
+    // console.log(products);
 
 
 loadcart();

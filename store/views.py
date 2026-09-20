@@ -66,13 +66,13 @@ def cart_api(request):
             }, status=400)
     for item in data:
         # if not isinstance(item["quantity"] , int) or item["quantity"] <= 0:
-        if not type(item["quantity"] is int) or item["quantity"] <= 0:
+        if not type(item["quantity"]) is int or item["quantity"] <= 0:
             return JsonResponse({
                 "message": "تعداد محصول نامعتبر است"
             }, status=400)
     for item in data:
         # if not isinstance(item["product_id"], int):
-        if type(item["product_id"] is int):
+        if type(item["product_id"]) is not int:
             return JsonResponse({
                 "message": "شناسه محصول نامعتبر است"
             }, status=400)
@@ -99,7 +99,8 @@ def cart_api(request):
                 stock = product_obj.stock
                 product_by_id[item["product_id"]] = product_obj
                 if stock >= item["quantity"]:
-                    print("موجودی کافی")
+                    # print("موجودی کافی")
+                    pass
                 else:
                     # print("")
                     return JsonResponse({
