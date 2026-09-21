@@ -71,3 +71,158 @@ class CartApiTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 409)
+
+
+
+    def test_create_order_with_invalid_product_id(self):
+        cart_data = [
+            {
+                "product_id": "abc",
+                "quantity": 2
+            }
+        ]
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_create_order_with_zero_quantity(self):
+        product_obj = product.objects.create(
+            name="Test Product",
+            slug="test-product",
+            price=10000,
+            stock=5,
+            description="Test description"
+        )
+
+        cart_data = [
+            {
+                "product_id":product_obj.id,
+                "quantity": 0
+            }
+        ]
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_create_order_with_invalid_quantity_type(self):
+        product_obj = product.objects.create(
+            name="Test Product",
+            slug="test-product",
+            price=10000,
+            stock=5,
+            description="Test description"
+        )
+
+        cart_data = [
+            {
+                "product_id": product_obj.id,
+                "quantity": "2"
+            }
+        ]
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+
+
+    def test_create_order_with_empty_cart(self):
+
+        cart_data = []
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_create_order_with_product_not_found(self):
+        cart_data = [
+            {
+                "product_id": 9999,
+                "quantity": 2
+            }
+        ]
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+
+
+    def test_create_order_without_not_product_id(self):
+
+        cart_data = [{
+            "quantity":2
+        } ]
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+
+    def test_create_order_without_quantity(self):
+        product_obj = product.objects.create(
+            name="Test Product",
+            slug="test-product",
+            price=10000,
+            stock=5,
+            description="Test description"
+        )
+
+        cart_data = [
+            {
+                "product_id": product_obj.id,
+            }
+        ]
+
+        response = self.client.post(
+            "/api/cart/",
+            data=json.dumps(cart_data),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_cart_api_with_get_request(self):
+        response = self.client.get(
+            "/api/cart/"
+        )
+
+        self.assertEqual(response.status_code, 405)
+
+
+
+    def test_cart_api_with_invalid_json(self):
+        response = self.client.post(
+            "/api/cart/",
+            data='{"product_id": 1, "quantity": 2',
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+
