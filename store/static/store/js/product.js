@@ -1,10 +1,9 @@
-import {getproducts} from "./pstoredata2.js";
+import {getproducts,loadcart,cart,savecart} from "./pstoredata2.js";
 const products = await getproducts();
 
 
 
-// loadproducts();
-// loadcart();
+loadcart();
 const productdetail = document.querySelector(".product-detail");
 // const params = new URLSearchParams(window.location.search);
 // const productslug = params.get("slug");
@@ -56,7 +55,7 @@ else {
             let selectproduct = cart.find(productitem => product.id === productitem.id);
             if (selectproduct) {
                 // ++selectproduct.count;
-                window.location.href = "pstorecart2.html";
+                window.location.href = "/cart/";
                 // alert("در سبد خرید وجود دارد جهت افزایش به سبد خرید مراجعه نمایید");
                 return;
             }
