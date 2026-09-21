@@ -191,11 +191,10 @@ registerbutton.addEventListener("click", async function () {
             cartitem.innerHTML = "";
             checkemptycart();
             showtotalpricecart();
-            alert("سفارش شما با شماره سفارش" + "     " + result.order_id + "با موفقیت ثبت گردید" + "   " + result.total_price.toLocaleString())
-        else
-            {
-                alert(result.message);
-            }
+            alert("سفارش شما با شماره سفارش" + "     " + result.order_id + "با موفقیت ثبت گردید" + "   " + result.total_price.toLocaleString());
+        } else {
+            alert(result.message);
+        }
 
     } catch (error) {
         // console.log("عدم ارتباط با سرور");
@@ -203,21 +202,23 @@ registerbutton.addEventListener("click", async function () {
         alert("عدم ارتباط با سرور");
 
     }
+});
 
 
-function checkemptycart() {
-    if (cart.length === 0) {
-        let li = document.createElement("li");
-        li.className = "empty";
-        let emptymessage = document.createElement("p");
-        emptymessage.textContent = "سبد خرید شما خالی است";
-        li.appendChild(emptymessage);
-        let store = document.createElement("a");
-        store.href = "/";
-        store.textContent = "صفحه محصولات";
-        li.appendChild(store);
-        cartitem.appendChild(li);
-        registerbutton.disabled = true;
+    function checkemptycart() {
+        if (cart.length === 0) {
+            let li = document.createElement("li");
+            li.className = "empty";
+            let emptymessage = document.createElement("p");
+            emptymessage.textContent = "سبد خرید شما خالی است";
+            li.appendChild(emptymessage);
+            let store = document.createElement("a");
+            store.href = "/";
+            store.textContent = "صفحه محصولات";
+            li.appendChild(store);
+            cartitem.appendChild(li);
+            registerbutton.disabled = true;
 
+        }
     }
-}
+
