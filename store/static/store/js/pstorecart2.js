@@ -1,4 +1,5 @@
 import {getproducts, cart, loadcart, savecart, checkstock} from "./pstoredata2.js";
+import {totalproduct,totalpricecart,totalcounter} from "./cartlogic.js";
 
 const products = await getproducts();
 
@@ -127,9 +128,7 @@ cartitem.addEventListener("click", function (event) {
     }
 })
 
-function totalproduct(product) {
-    return product.price * product.count;
-}
+
 
 
 function showtotalproduct(li, product) {
@@ -139,30 +138,18 @@ function showtotalproduct(li, product) {
 }
 
 
-function totalpricecart() {
-    let sum = 0;
-    for (let item of cart) {
-        sum += item.count * item.price;
-    }
-    return sum;
-}
+
 
 
 function showtotalpricecart() {
-    let total = totalpricecart();
-    let count = totalcounter();
+    let total = totalpricecart(cart);
+    let count = totalcounter(cart);
     totalcart.textContent = "مجموع سبد خرید" + total.toLocaleString() + "   تومان";
     totalcount.textContent = "تعداد اقلام" + count;
 }
 
 
-function totalcounter() {
-    let count = 0;
-    for (let item of cart) {
-        count += item.count
-    }
-    return count;
-}
+
 
 
 registerbutton.addEventListener("click", async function () {
