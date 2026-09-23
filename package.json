@@ -1,0 +1,24 @@
+{
+  "name": "pstore2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reza6475/pstore2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/reza6475/pstore2/issues"
+  },
+  "homepage": "https://github.com/reza6475/pstore2#readme",
+  "devDependencies": {
+    "vitest": "^5.0.1"
+  }
+}
