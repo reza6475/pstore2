@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from .models import product,order,orderitem
 from django.http import JsonResponse
 from django.conf import settings
 from django.db import transaction
 import json
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login,logout
+
 
 
 # Create your views here.
@@ -34,7 +38,8 @@ def products_api(request):
             'name': product_item.name,
             'price': product_item.price,
             'stock': product_item.stock,
-            'slug': product_item.slug
+            'slug': product_item.slug,
+            'description':product_item.description
         })
     return JsonResponse(data, safe=False)
 
@@ -136,3 +141,43 @@ def cart_api(request):
         "order_id":new_order.id,
         "total_price": new_order.total_price
     },status=201)
+
+def register_form(request):
+    if request.method=="POST":
+        username=request.POST["username"]
+        password=request.POST["password"]
+        confirmpassword=request.POST["confirmpassword"]
+        if User.objects.filter(username=username).exists():
+            messages.warning(request, "نام کاربری تکراری")
+            return render(request, "store/register.html")
+        if  password!=confirmpassword:
+            messages.warning(request," عدم تطابق رمز عبور")
+            return render(request, "store/register.html")
+        else:
+            User.objects.create_user(
+                username=username,
+                password=password
+            )
+            messages.success(request,"ثبت نام با موفقیت انجام شد")
+            return redirect("/")
+    return render(request, "store/register.html")
+
+
+def login_form(request):
+    if request.method=="POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user=authenticate(request,username=username,password=password)
+        if  not user:
+            messages.warning(request,"نام کاربری یا رمز عبور اشتباه است")
+            return render(request, "store/login.html")
+        else:
+            login(request, user)
+            messages.success(request,"ورود موفق")
+            return redirect("/")
+    return render(request,"store/login.html")
+
+
+def logout_form(request):
+    logout(request)
+    return redirect("/")

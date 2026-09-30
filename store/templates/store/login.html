@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'store/css/register.css'%}">
+    <title>Title</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+
+    <label for="username">نام کاربری</label>
+    <input type="text" id="username" name="username">
+
+    <label for="password">رمز عبور</label>
+    <input type="password" id="password" name="password">
+
+
+    <button type="submit">ورود</button>
+
+</form>
+</body>
+</html>

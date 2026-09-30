@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid blue;
+    border-radius: 5px;
+    padding: 20px;
+    width: fit-content;
+    margin: auto;
+    margin-top: 150px;
+
+}
+
+label {
+    width: 100%;
+    text-align: right;
+}
+
+button {
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    /*transition: .5s;*/
+}
+
+button:hover {
+    color: #0a940a;
+    transform: translateY(-5px);
+
+}
+
+
+.message{
+    text-align: center;
+    /*width: 100%;*/
+    margin-top: 20px;
+}
