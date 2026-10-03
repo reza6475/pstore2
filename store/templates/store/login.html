@@ -1,13 +1,10 @@
+{%extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'store/css/register.css'%}">
-    <title>Title</title>
-</head>
-<body>
+
+   {%block header_refrences%} <link rel="stylesheet" href="{% static 'store/css/register.css'%}"> {%endblock%}
+    {%block title%} صفحه ورود   {%endblock%}
+{%block content%}
 <form method="post">
     {% csrf_token %}
 
@@ -17,9 +14,17 @@
     <label for="password">رمز عبور</label>
     <input type="password" id="password" name="password">
 
-
     <button type="submit">ورود</button>
 
 </form>
-</body>
-</html>
+{% if messages %}
+{% for message in messages %}
+<p class="message">{{ message }}</p>
+{% endfor %}
+{% endif %}
+<div class="noaccount">
+    <p>حساب کاربری ندارید؟</p>
+    <a href="/register/">ثبت نام</a>
+</div>
+{%endblock%}
+

@@ -1,12 +1,9 @@
+{%extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'store/css/register.css'%} ">
-    <title>Title</title>
-</head>
-<body>
+
+   {%block header_refrences%} <link rel="stylesheet" href="{% static 'store/css/register.css'%} "> {%endblock%}
+   {%block title%} صفحه ثبت نام {%endblock%}
+{%block content%}
 <h1>صفحه ثبت نام</h1>
 
 <!--<p>{{ request.method }}</p>-->
@@ -23,6 +20,9 @@
     <label for="confirmpassword">تکرار رمز عبور</label>
     <input type="password" id="confirmpassword" name="confirmpassword">
 
+    <label for="email">پست الکترونیک</label>
+    <input type="email" id="email" name="email">
+
     <button type="submit">ثبت نام</button>
 
 </form>
@@ -31,5 +31,5 @@
 <p class="message">{{ message }}</p>
 {% endfor %}
 {% endif %}
-</body>
-</html>
+
+{%endblock%}
