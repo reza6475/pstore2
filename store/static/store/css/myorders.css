@@ -1,0 +1,17 @@
+table {
+    display: flex;
+    justify-content: center;
+    /*border: 1px solid #563496;*/
+    text-align: center;
+    margin: 30px;
+}
+
+table th {
+    border: 1px solid #563496;
+
+}
+
+table td {
+    padding: 20px;
+    border: 1px solid #563496;
+}

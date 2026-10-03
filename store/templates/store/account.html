@@ -1,0 +1,29 @@
+{%extends "base.html"%}
+
+  {% block title %} حساب کاربری   {%endblock%}
+{%block content %}
+<h1>حساب کاربری</h1>
+<p>{{user.email}}</p>
+<form method="POST">
+  {% csrf_token %}
+  <label for="email">پست الکترونیکی</label>
+  <input type="email" name="email" id="email" value="{{user.email}}">
+
+  <label for="currentpassword">رمز عبور فعلی</label>
+  <input type="password" name="currentpassword" id="currentpassword" >
+
+  <label for="password">رمز عبور جدید</label>
+  <input type="password" name="password" id="password" >
+
+  <label for="confirmpassword">تایید رمز عیور جدید</label>
+  <input type="password" name="confirmpassword" id="confirmpassword">
+
+
+  <button type="submit"> تایید</button>
+</form>
+{% if messages %}
+{% for message in messages%}
+{{message}}
+{%endfor%}
+{%endif%}
+{% endblock %}

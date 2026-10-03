@@ -21,7 +21,9 @@
     </div>
     <div class="account">
     {% if user.is_authenticated %}
-        <span>خوش آمدی {{ user.username }}</span>
+        <span>(<a href="account/">{{user.username }}</a>)خوش آمدی</span>&nbsp;&nbsp;&nbsp;
+        <a href="/myorders/">سفارش های من</a>&nbsp;&nbsp;&nbsp;
+
         <a href="/logout/">خروج</a>
     {% else %}
         <a href="/login/">ورود</a>

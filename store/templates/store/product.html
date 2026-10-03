@@ -1,39 +1,14 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block header_refrences %}
     <link rel="stylesheet" href="{% static 'store/css/product.css' %}">
-    <title>Document</title>
-</head>
+{% endblock %}
+{% block titile %}
+جزئیات محصول
+{% endblock %}
 
-<body>
-    <header>
-        <div class="logo">
-            <a href="/">لوگو</a>
-        </div>
-        <div class="search">
-            <input type="text">
-            <button> جستجو</button>
-        </div>
-        <div class="account">
-            <a href="">حساب کاربری</a>
-        </div>
-        <div class="cart">
-            <a href="/cart/">سبد خرید</a>
-        </div>
-    </header>
-    <nav>
-        <ul class="menu">
-            <li><a href="#">محصولات</a></li>
-            <li><a href="#">دسته بندی</a></li>
-            <li><a href="#">فروش ویژه</a></li>
-            <li><a href="#">تخفیف ها</a></li>
-        </ul>
-    </nav>
+{% block content %}
     <main>
         <section class="product">
             <h2>جزئیات محصول</h2>
@@ -45,16 +20,11 @@
 
 
     </main>
-    <footer>
-        <ul class="footer">
-            <li><a href="#">در باره ما</a></li>
-            <li><a href="#">خدمات</a></li>
-            <li><a href="#">پشتیانی</a></li>
-            <li><a href="#">شبکه های اجتماعی</a></li>
-        </ul>
-    </footer>
+{% endblock %}
+
+{% block footer_refrences %}
+
 <!--    <script src="{% static 'store/js/pstoredata2.js'%}"></script>-->
     <script type="module" src="{% static  'store/js/product.js'%}"></script>
-</body>
 
-</html>
+{% endblock %}

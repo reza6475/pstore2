@@ -65,14 +65,17 @@ header {
 }
 
 .account {
-    flex: 3;
+    flex: 5;
     text-align: center;
     /* background: #0ebfec;
     border: 1px solid #6e0eec; */
     margin: 20px;
     border-radius: 5px;
-
     height: 30px;
+    padding: 5px;
+}
+.link{
+    border-right: 1px solid blue;
     padding: 5px;
 }
 
@@ -81,6 +84,7 @@ header {
     text-decoration: none;
     transition: transform .5s;
 }
+
 
 .account a:hover {
     transform: translateY(-5px);
@@ -258,7 +262,6 @@ main {
 }
 
 
-
 .total {
     display: flex;
     justify-content: center;
@@ -399,7 +402,6 @@ main {
 }
 
 
-
 .imagebox {
     display: flex;
     width: 40%;
@@ -449,7 +451,7 @@ footer {
 /*    gap: 20px;*/
 /*}*/
 
-.articlep{
+.articlep {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -489,10 +491,10 @@ footer {
 }
 
 
-.infoboxp button:hover{
+.infoboxp button:hover {
     cursor: pointer;
     background: #ec0e0e;
-    box-shadow:0 0 1px  red;
+    box-shadow: 0 0 1px red;
     opacity: .9;
 }
 
@@ -507,11 +509,6 @@ footer {
 }
 
 
-
-
-
-
-
 .product-card {
     display: flex;
     flex-direction: column;
@@ -521,7 +518,6 @@ footer {
 .product-card button {
     margin-top: auto;
 }
-
 
 
 .product-card h3 {
@@ -535,11 +531,11 @@ footer {
 }
 
 
-.namelink{
+.namelink {
     text-decoration: none;
 }
 
 
-.namelink:hover{
+.namelink:hover {
     background: red;
 }

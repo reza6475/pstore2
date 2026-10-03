@@ -9,5 +9,7 @@ urlpatterns=[
     path("api/cart/",views.cart_api),
     path("register/",views.register_form),
     path("login/",views.login_form),
-    path("logout/",views.logout_form)
+    path("logout/",views.logout_form),
+    path("account/",views.account),
+    path("myorders/",views.my_orders)
 ]
