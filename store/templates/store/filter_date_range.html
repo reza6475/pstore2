@@ -1,0 +1,35 @@
+
+<details open>
+    <summary>{{ spec.title }}</summary>
+
+    <form method="get">
+        {% for key, value in request.GET.items %}
+            {% if key != "start_date" and key != "end_date" %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endif %}
+        {% endfor %}
+
+        <p>
+            <label for="start_date">از تاریخ:</label>
+            <input
+                type="date"
+                id="start_date"
+                name="start_date"
+                value="{{ request.GET.start_date|default:'' }}"
+            >
+        </p>
+
+        <p>
+            <label for="end_date">تا تاریخ:</label>
+            <input
+                type="date"
+                id="end_date"
+                name="end_date"
+                value="{{ request.GET.end_date|default:'' }}"
+            >
+        </p>
+
+        <button type="submit">اعمال فیلتر</button>
+    </form>
+</details>
+

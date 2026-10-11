@@ -1,13 +1,15 @@
 {%extends "base.html"%}
-
+{%load static %}
+{%block header_refrences %}
+<link rel="stylesheet" href="{% static 'store/css/account.css'%}">
+{%endblock%}
   {% block title %} حساب کاربری   {%endblock%}
 {%block content %}
 <h1>حساب کاربری</h1>
-<p>{{user.email}}</p>
 <form method="POST">
   {% csrf_token %}
   <label for="email">پست الکترونیکی</label>
-  <input type="email" name="email" id="email" value="{{user.email}}">
+  <input type="email" name="email" id="email" value="{{request.user.email}}">
 
   <label for="currentpassword">رمز عبور فعلی</label>
   <input type="password" name="currentpassword" id="currentpassword" >
@@ -21,9 +23,5 @@
 
   <button type="submit"> تایید</button>
 </form>
-{% if messages %}
-{% for message in messages%}
-{{message}}
-{%endfor%}
-{%endif%}
+
 {% endblock %}

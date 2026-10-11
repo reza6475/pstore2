@@ -6,9 +6,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/pstore.css'%}">
-    {%block header_refrences%} {%endblock%}
-   <title>{%block title%} صفحه اصلی   {%endblock%}</title>
+    <link rel="stylesheet" href="{%static 'store/css/pstore.css' %}">
+    {%block header_refrences%}
+<!--    <link rel="stylesheet" href="{%static 'store/css/myorders.css'%}">-->
+<!--     <link rel="stylesheet" href="{% static 'store/css/register.css'%} ">-->
+    {%endblock%}
+
+
+    <title>{% block title %}صفحه اصلی{% endblock %}</title>
 </head>
 
 <body>
@@ -21,14 +26,14 @@
         <button> جستجو</button>
     </div>
     <div class="account">
-    {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
         <span>(<a href="/account/">{{user.username }}</a>)خوش آمدی</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="/myorders/" class="link">سفارش های من</a>&nbsp;&nbsp;&nbsp;
         <a href="/logout/" class="link">خروج</a>
-    {% else %}
+        {% else %}
         <a href="/login/">ورود</a>
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
     <div class="cart">
         <a href="/cart/">سبد خرید</a>
     </div>
@@ -43,7 +48,13 @@
 </nav>
 {% block content%}
 
-{%endblock%}
+    {%endblock%}
+<p class="message">
+    {%for message in messages%}
+    {{message}}
+    {%endfor%}
+</p>
+
 <footer>
     <ul class="footer">
         <li><a href="#">در باره ما</a></li>
@@ -51,11 +62,13 @@
         <li><a href="#">پشتیانی</a></li>
         <li><a href="#">شبکه های اجتماعی</a></li>
     </ul>
-    {%block footer_refrences%}  {%endblock%}
+    {%block footer_refrences%}
+
+    {%endblock%}
 
 </footer>
 <!--    <script src="{%static 'js/pstoredata2.js' %}"></script>-->
-<script type="module" src="{%static 'store/js/pstore2.js' %}"></script>
+<!--<script type="module" src="{%static 'store/js/pstore2.js' %}"></script>-->
 </body>
 
 </html>

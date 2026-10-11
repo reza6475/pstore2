@@ -1,0 +1,26 @@
+{%load static %}
+{%load humanize%}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"  href="{% static 'store/css/payment.css'%}">
+    <title>Title</title>
+</head>
+<body>
+<h1>درگاه پرداخت</h1>
+<div class="payment">
+    <p>شماره سفارش:{{order.id}}</p>
+    <p> مبلغ کل:{{payment.amount|intcomma}}تومان </p>
+    <p>وضعیت سفارش:{{payment_status}}</p>
+</div>
+<form method="POST">
+    {%csrf_token%}
+    <button type="submit">پرداخت</button>
+</form>
+{% for message in messages%}
+{{message}}
+{%endfor%}
+</body>
+</html>

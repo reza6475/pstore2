@@ -1,0 +1,32 @@
+{%extends "base.html"%}
+{%load static %}
+{%load humanize%}
+{%block header_refrences%}
+<link rel="stylesheet" href="{%static 'store/css/myorders.css'%}">
+{%endblock%}
+{%block title%} جزئیات سفارش{%endblock%}
+{%block content%}
+<div class="order_summery">
+    <p> شماره سفارش:{{order.id}}</p>
+<p> مبلغ کل سفارش:{{order.total_price|intcomma}} تومان</p>
+
+</div>
+
+<table>
+    <tr>
+
+        <td>نام محصول</td>
+        <td>تعداد سفارش</td>
+        <td>قیمت واحد</td>
+    </tr>
+    {% for item in order_item%}
+    <tr>
+        <td>{{item.product.name}}</td>
+        <td>{{item.quantity}}</td>
+        <td> {{item.unit_price|intcomma}}تومان</td>
+    </tr>
+    {%endfor%}
+</table>
+
+<!--{{order_item}}-->
+{%endblock%}

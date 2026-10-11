@@ -5,11 +5,11 @@
 <link rel="stylesheet" href="{%static 'store/css/myorders.css'%}">
 {%endblock%}
 {% block title %}
-    سفارش های من
+سفارش های من
 {% endblock %}
 
 {% block content %}
-
+{% if orders %}
 <table>
     <tr>
         <th>شماره سفارش</th>
@@ -19,12 +19,17 @@
 
     {% for order in orders %}
     <tr>
-        <td>{{ order.id }}</td>
+        <td><a href="/myorders/{{ order.id }}/">{{ order.id }}</a></td>
         <td>{{ order.created_at }}</td>
         <td>{{ order.total_price|intcomma}}تومان</td>
     </tr>
     {% endfor %}
 
 </table>
+{%else%}
+<p>
 
+    <a href="/">(صفحه محصولات)</a>
+</p>
+{%endif%}
 {% endblock %}

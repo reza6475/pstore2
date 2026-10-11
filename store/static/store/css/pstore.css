@@ -195,8 +195,11 @@ main {
 
 .section h2 {
     font-size: 28px;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    margin: auto;
 }
-
 
 .product-grid {
     display: grid;
@@ -459,7 +462,7 @@ footer {
     gap: 20px;
 }
 
-.product {
+.product ,.newproduct, .offerproduct{
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -538,4 +541,10 @@ footer {
 
 .namelink:hover {
     background: red;
+}
+
+
+.message {
+    text-align: center;
+    margin: 20px;
 }

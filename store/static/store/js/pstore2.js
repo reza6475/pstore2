@@ -1,7 +1,45 @@
+import {getproducts, cart, savecart, loadcart} from "./pstoredata2.js";
+// const products = await getproducts();
+// if (!products) {
+//     alert("خطا در بارگیری محصولات")
+// }
+// else{
+//    document.querySelectorAll(".loading").forEach(element => {
+//     element.remove();
+// });
+//
+// }
+async function loadPage() {
+    const products = await getproducts();
 
-import {getproducts,cart,savecart,loadcart} from "./pstoredata2.js";
-const products = await getproducts();
-    // console.log(products);
+    if (!products) {
+        const loadingElements = document.querySelectorAll(".loading");
+        loadingElements.forEach(element => {
+            element.remove();
+        });
+        const error = document.createElement("p")
+        error.textContent = "خطا در بارگیری محصولات";
+        // document.body.appendChild(error);
+        const allproduct = document.querySelector(".all-product")
+        allproduct.appendChild(error);
+
+        // alert("خطا در بارگیری محصولات");
+        return;
+    } else {
+         document.querySelectorAll(".loading").forEach(element => {
+            element.remove();
+        });
+
+    }
+
+    return products;
+
+}
+
+const products = await loadPage();
+
+
+// console.log(products);
 
 
 loadcart();
@@ -49,27 +87,21 @@ main.addEventListener("click", function (event) {
 })
 
 
-
-
-
-
-
-
 function createProductCard(product) {
     let article = document.createElement("article");
-    article.className="product-card";
+    article.className = "product-card";
     let imageproduct = document.createElement("img");
     imageproduct.src = product.image;
-    imageproduct.alt=product.name;
+    imageproduct.alt = product.name;
     let productlink = document.createElement("a");
     productlink.href = `/product/${product.slug}/`;
     productlink.appendChild(imageproduct)
     article.appendChild(productlink);
     let h3 = document.createElement("h3");
     h3.textContent = product.name;
-    let namelink=document.createElement("a");
-    namelink.className="namelink";
-    namelink.href=`/product/${product.slug}/`;
+    let namelink = document.createElement("a");
+    namelink.className = "namelink";
+    namelink.href = `/product/${product.slug}/`;
     namelink.appendChild(h3);
     article.appendChild(namelink);
     let priceproduct = document.createElement("p");
