@@ -153,7 +153,7 @@ function showtotalpricecart() {
 
 
 registerbutton.addEventListener("click", async function () {
-    console.log("دکمه ثبت سفارش کلیک شد");
+    // console.log("دکمه ثبت سفارش کلیک شد");
     const cartdata = cart.map(item => {
         return {
             product_id: item.id,
@@ -178,7 +178,8 @@ registerbutton.addEventListener("click", async function () {
             cartitem.innerHTML = "";
             checkemptycart();
             showtotalpricecart();
-            alert("سفارش شما با شماره سفارش" + "     " + result.order_id + "با موفقیت ثبت گردید" + "   " + result.total_price.toLocaleString());
+            // alert("سفارش شما با شماره سفارش" + "     " + result.order_id + "با موفقیت ثبت گردید" + "   " + result.total_price.toLocaleString());
+            window.location.href=`/myorder/${result.order_id}/payment/`
         } else {
             alert(result.message);
         }

@@ -8,9 +8,15 @@
 // })
 
 // در صورتی که بخواهیم از فایل json در فایل های دیگر استفاده نماییم
-export async function getproducts(){
-    const response=await fetch('/api/products/');
-    return response.json();
+//
+export async function getproducts() {
+    try {
+        const response = await fetch('/api/products/');
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
 
  export let cart = [];

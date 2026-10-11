@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
+
 class product(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام محصول")
     slug = models.SlugField(max_length=200, unique=True)
@@ -19,7 +22,7 @@ class product(models.Model):
 class order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="زمان سفارش")
     total_price = models.PositiveIntegerField(verbose_name="جمع کل")
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"سفارش شماره {self.id}"
@@ -44,3 +47,13 @@ class orderitem(models.Model):
 
     def __str__(self):
         return f"({self.product.name})"
+
+
+class payment(models.Model):
+    order = models.OneToOneField(
+        order,
+        on_delete=models.CASCADE
+    )
+    amount = models.PositiveIntegerField()
+    status = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)

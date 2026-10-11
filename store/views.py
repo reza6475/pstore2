@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import product, order, orderitem
+from .models import product, order, orderitem,payment
 from django.http import JsonResponse
 from django.conf import settings
 from django.db import transaction
@@ -39,7 +39,9 @@ def products_api(request):
             'price': product_item.price,
             'stock': product_item.stock,
             'slug': product_item.slug,
-            'description': product_item.description
+            'description': product_item.description,
+            'isnew':product_item.isnew,
+            'isoffer':product_item.isoffer
         })
     return JsonResponse(data, safe=False)
 
@@ -114,6 +116,7 @@ def cart_api(request):
                     }, status=409)
                 total_price += product_obj.price * item["quantity"]
             new_order = order.objects.create(total_price=total_price, user=request.user)
+            new_payment=payment.objects.create(order=new_order,amount=new_order.total_price,status="pending")
             for item in data:
                 # product_obj = product.objects.get(id=item["product_id"])
                 product_obj = product_by_id[item["product_id"]]
@@ -121,6 +124,7 @@ def cart_api(request):
                                          unit_price=product_obj.price)
                 product_obj.stock -= item["quantity"]
                 product_obj.save()
+
     # except Exception:
     #     return JsonResponse({
     #         "message":"خطا در ثبت سفارش"},
@@ -207,11 +211,60 @@ def account(request):
 
     return render(request, "store/account.html")
 
+
 @login_required
 def my_orders(request):
     orders = order.objects.filter(user=request.user)
+    if not orders:
+        messages.warning(request, "شما هنوز سفارشی ثبت نکرده اید")
     context = {
         "orders": orders
     }
 
     return render(request, "store/myorders.html", context)
+
+
+@login_required
+def order_details(request, order_id):
+    select_order = get_object_or_404(order, id=order_id, user=request.user)
+
+
+    order_item = orderitem.objects.filter(order=select_order)
+    context = {
+    "order": select_order,
+    "order_item": order_item
+   }
+    return render(request, "store/orderdetail.html", context)
+
+
+@login_required
+def start_payment(request, order_id):
+    select_order = get_object_or_404(
+        order,
+        id=order_id,
+        user=request.user
+    )
+
+    select_payment = get_object_or_404(
+        payment,
+        order=select_order
+    )
+    if select_payment.status == "pending":
+        payment_status = "در انتظار پرداخت"
+    elif select_payment.status == "paid":
+        payment_status = "پرداخت شده"
+    elif select_payment.status == "failed":
+        payment_status = "پرداخت ناموفق"
+    context={
+        "order":select_order,
+        "payment":select_payment,
+        "payment_status":payment_status
+    }
+    if request.method=="POST":
+        select_payment.status="paid"
+        select_payment.save()
+        messages.success(request,"سفارش شما با موفقیت پرداخت گردید")
+    return  render(request,"store/payment.html",context)
+
+
+    # در مرحله بعد، اینجا کاربر را به درگاه می‌فرستیم

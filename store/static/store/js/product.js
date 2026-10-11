@@ -1,6 +1,26 @@
-import {getproducts,loadcart,cart,savecart} from "./pstoredata2.js";
-const products = await getproducts();
+import {getproducts, loadcart, cart, savecart} from "./pstoredata2.js";
 
+async function loadproduct() {
+    const products = await getproducts();
+    const loading = document.querySelector(".loading");
+    loading.remove();
+    const productdetail = document.querySelector(".product-detail");
+// بررسی خطای فراخوانی API و عدم نمایش محصول
+    if (!products) {
+        const error = document.createElement("p");
+        error.textContent = "خطا در بارگیری محصول";
+        productdetail.appendChild(error);
+        return;
+
+    }
+    // else {
+    //     const loading = document.querySelector(".loading");
+    //     loading.remove();
+    // }
+    return products;
+}
+
+const products = await loadproduct()
 
 
 loadcart();
@@ -12,9 +32,7 @@ const productslug = pathParts[2];
 let product = products.find(item => item.slug === productslug);
 if (!product) {
     productdetail.textContent = "محصول پیدا نشد";
-}
-
-else {
+} else {
     let article = document.createElement("article");
     article.className = "articlep";
     let imagebox = document.createElement("div");

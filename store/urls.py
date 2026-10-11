@@ -11,5 +11,7 @@ urlpatterns=[
     path("login/",views.login_form),
     path("logout/",views.logout_form),
     path("account/",views.account),
-    path("myorders/",views.my_orders)
+    path("myorders/",views.my_orders),
+    path("myorders/<int:order_id>/",views.order_details),
+    path("myorder/<int:order_id>/payment/",views.start_payment)
 ]

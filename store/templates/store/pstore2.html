@@ -1,56 +1,20 @@
+{%extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+{%block header_refrences%}
+<!--    <link rel="stylesheet" href="{% static 'css/pstore.css'%}">-->
+{%endblock%}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/pstore.css'%}">
-    <title>Document</title>
-</head>
 
-<body>
-<header>
-    <div class="logo">
-        <a href="/static">لوگو</a>
-    </div>
-    <div class="search">
-        <input type="text">
-        <button> جستجو</button>
-    </div>
-    <div class="account">
-    {% if user.is_authenticated %}
-        <span>(<a href="account/">{{user.username }}</a>)خوش آمدی</span>&nbsp;&nbsp;&nbsp;
-        <a href="/myorders/">سفارش های من</a>&nbsp;&nbsp;&nbsp;
+{%block content%}
 
-        <a href="/logout/">خروج</a>
-    {% else %}
-        <a href="/login/">ورود</a>
-    {% endif %}
-</div>
-    <div class="cart">
-        <a href="/cart/">سبد خرید</a>
-    </div>
-</header>
-<nav>
-    <ul class="menu">
-        <li><a href="#">محصولات</a></li>
-        <li><a href="#">دسته بندی</a></li>
-        <li><a href="#">فروش ویژه</a></li>
-        <li><a href="#">تخفیف ها</a></li>
-    </ul>
-</nav>
 <main>
-     {% if messages %}
-    {% for message in messages %}
-    <p class="message">{{ message }}</p>
-    {% endfor %}
-    {% endif %}
+
     <section class="product section">
         <h2>محصولات</h2>
 
         <div class="product-grid  all-product">
+            <p class="loading">در حال دریافت محصولات...</p>
             <!-- article ها توسط JavaScript ساخته می‌شوند -->
             <!--                {% for product in products%}-->
             <!--                <h1> {{product.name}}</h1>-->
@@ -63,6 +27,8 @@
         <h2>محصولات جدید</h2>
 
         <div class="product-grid  new-product">
+            <p class="loading">در حال دریافت محصولات...</p>
+
             <!-- article ها توسط JavaScript ساخته می‌شوند -->
 
         </div>
@@ -72,22 +38,18 @@
         <h2>محصولات پیشنهادی</h2>
 
         <div class="product-grid  offer-product">
+            <p class="loading">در حال دریافت محصولات...</p>
+
             <!-- article ها توسط JavaScript ساخته می‌شوند -->
 
         </div>
     </section>
 </main>
-<footer>
-    <ul class="footer">
-        <li><a href="#">در باره ما</a></li>
-        <li><a href="#">خدمات</a></li>
-        <li><a href="#">پشتیانی</a></li>
-        <li><a href="#">شبکه های اجتماعی</a></li>
-    </ul>
+{%endblock%}
 
-</footer>
+{%block footer_refrences%}
 <!--    <script src="{%static 'js/pstoredata2.js' %}"></script>-->
 <script type="module" src="{%static 'store/js/pstore2.js' %}"></script>
-</body>
+{%endblock%}
 
-</html>
+

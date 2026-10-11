@@ -1,17 +1,28 @@
 table {
-    display: flex;
-    justify-content: center;
-    /*border: 1px solid #563496;*/
+    margin: 30px auto;
     text-align: center;
-    margin: 30px;
 }
 
 table th {
     border: 1px solid #563496;
+    padding: 20px;
 
 }
 
 table td {
     padding: 20px;
     border: 1px solid #563496;
+}
+
+.order_summery{
+    border: 1px solid #0a940a;
+    width: fit-content;
+    margin: auto;
+    margin-top: 30px;
+    border-radius:10px ;
+}
+
+p{
+    text-align: center;
+    margin: 20px;
 }

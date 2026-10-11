@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
 
-    {% block header_refrences %}
-    <link rel="stylesheet" href="{% static 'store/css/product.css' %}">
+{% block header_refrences %}
+<link rel="stylesheet" href="{% static 'store/css/product.css' %}">
 {% endblock %}
-{% block titile %}
+{% block title %}
 جزئیات محصول
 {% endblock %}
 
 {% block content %}
-    <main>
-        <section class="product">
-            <h2>جزئیات محصول</h2>
-            <div class="product-detail">
+<main>
+    <section class="product">
+        <h2>جزئیات محصول</h2>
+        <div class="product-detail">
+            <p class="loading">در حال دریافت محصول...</p>
+        </div>
 
-            </div>
-
-        </section>
+    </section>
 
 
-    </main>
+</main>
 {% endblock %}
 
 {% block footer_refrences %}
 
 <!--    <script src="{% static 'store/js/pstoredata2.js'%}"></script>-->
-    <script type="module" src="{% static  'store/js/product.js'%}"></script>
+<script type="module" src="{% static  'store/js/product.js'%}"></script>
 
 {% endblock %}
