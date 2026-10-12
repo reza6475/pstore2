@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import product, order, orderitem, payment
 from django.template.response import TemplateResponse
 from .forms import OrderDateRangeForm
+from jalali_suite.admin import JalaliDateAdminMixin
 
 admin.site.register(product)
 
@@ -60,10 +61,11 @@ class orderiteminline(admin.TabularInline):
 
 
 @admin.register(order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(JalaliDateAdminMixin, admin.ModelAdmin):
+    jalali_widgets_for_gregorian_fields = True
     list_display = ("id", "created_at", "total_price")
     inlines = [orderiteminline]
-    readonly_fields = ("total_price",)
+    readonly_fields = ("total_price","created_at")
     ordering = ("-created_at",)
     search_fields = ("user__username",)
     list_filter = ("created_at",)
