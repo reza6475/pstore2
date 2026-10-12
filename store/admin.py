@@ -14,9 +14,14 @@ class OrderDateRangeFilter(admin.ListFilter):
 
     def __init__(self, request, params, model, model_admin):
         super().__init__(request, params, model, model_admin)
+        self.date_form = OrderDateRangeForm(request.GET or None)
 
         params.pop("start_date", None)
         params.pop("end_date", None)
+
+    @property
+    def media(self):
+        return OrderDateRangeForm().media
 
     def has_output(self):
         return True
@@ -28,19 +33,17 @@ class OrderDateRangeFilter(admin.ListFilter):
         return []
 
     def queryset(self, request, queryset):
-
-        start_date = request.GET.get("start_date")
-        end_date = request.GET.get("end_date")
-
-        if start_date:
-            queryset = queryset.filter(
-                created_at__date__gte=start_date
-            )
-
-        if end_date:
-            queryset = queryset.filter(
-                created_at__date__lte=end_date
-            )
+        date_form = OrderDateRangeForm(request.GET)
+        if date_form.is_valid():
+            start_date = date_form.cleaned_data["start_date"]
+            end_date = date_form.cleaned_data["end_date"]
+            if start_date:
+                queryset = queryset.filter(
+                    created_at__date__gte=start_date)
+            if end_date:
+                queryset = queryset.filter(
+                    created_at__date__lte=end_date
+                )
 
         return queryset
 

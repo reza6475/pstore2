@@ -1,32 +1,46 @@
+{% load static %}
 
+<link rel="stylesheet" href="{% static 'jalali_suite/css/vazirmatn.css' %}">
+<link rel="stylesheet" href="{% static 'jalali_suite/css/jalali-datepicker.css' %}">
+<script src="{% static 'jalali_suite/js/jalali-datepicker.js' %}"></script>
 <details open>
     <summary>{{ spec.title }}</summary>
 
     <form method="get">
         {% for key, value in request.GET.items %}
-            {% if key != "start_date" and key != "end_date" %}
-                <input type="hidden" name="{{ key }}" value="{{ value }}">
-            {% endif %}
+        {% if key != "start_date" and key != "end_date" %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endif %}
         {% endfor %}
 
+        <!--        <p>-->
+        <!--            <label for="start_date">از تاریخ:</label>-->
+        <!--            <input-->
+        <!--                type="date"-->
+        <!--                id="start_date"-->
+        <!--                name="start_date"-->
+        <!--                value="{{ request.GET.start_date|default:'' }}"-->
+        <!--            >-->
+        <!--        </p>-->
+
+        <!--        <p>-->
+        <!--            <label for="end_date">تا تاریخ:</label>-->
+        <!--            <input-->
+        <!--                type="date"-->
+        <!--                id="end_date"-->
+        <!--                name="end_date"-->
+        <!--                value="{{ request.GET.end_date|default:'' }}"-->
+        <!--            >-->
+        <!--        </p>-->
+
         <p>
-            <label for="start_date">از تاریخ:</label>
-            <input
-                type="date"
-                id="start_date"
-                name="start_date"
-                value="{{ request.GET.start_date|default:'' }}"
-            >
+            <label for="{{ spec.date_form.start_date.id_for_label }}">از تاریخ:</label>
+            {{ spec.date_form.start_date }}
         </p>
 
         <p>
-            <label for="end_date">تا تاریخ:</label>
-            <input
-                type="date"
-                id="end_date"
-                name="end_date"
-                value="{{ request.GET.end_date|default:'' }}"
-            >
+            <label for="{{ spec.date_form.end_date.id_for_label }}">تا تاریخ:</label>
+            {{ spec.date_form.end_date }}
         </p>
 
         <button type="submit">اعمال فیلتر</button>
