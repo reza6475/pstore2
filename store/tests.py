@@ -5,11 +5,16 @@ import json
 
 from django.test import TestCase
 
-from .models import product, order, orderitem
+from .models import product, order, orderitem,User
 
 
 class CartApiTests(TestCase):
-
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpassword123"
+        )
+        self.client.force_login(self.user)
     def test_create_order_successfully(self):
         # 1. آماده‌سازی
         product_obj = product.objects.create(
@@ -71,6 +76,11 @@ class CartApiTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 409)
+        self.assertEqual(order.objects.count(), 0)
+        self.assertEqual(orderitem.objects.count(), 0)
+
+        product_obj.refresh_from_db()
+        self.assertEqual(product_obj.stock, 5)
 
 
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import product, order, orderitem,payment
+from .models import product, order, orderitem, payment
 from django.http import JsonResponse
 from django.conf import settings
 from django.db import transaction
@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 # Create your views here.
@@ -40,8 +41,8 @@ def products_api(request):
             'stock': product_item.stock,
             'slug': product_item.slug,
             'description': product_item.description,
-            'isnew':product_item.isnew,
-            'isoffer':product_item.isoffer
+            'isnew': product_item.isnew,
+            'isoffer': product_item.isoffer
         })
     return JsonResponse(data, safe=False)
 
@@ -106,17 +107,13 @@ def cart_api(request):
                     }, status=400)
                 stock = product_obj.stock
                 product_by_id[item["product_id"]] = product_obj
-                if stock >= item["quantity"]:
-                    # print("موجودی کافی")
-                    pass
-                else:
-                    # print("")
+                if stock < item["quantity"]:
                     return JsonResponse({
                         "message": "عدم موجودی"
                     }, status=409)
                 total_price += product_obj.price * item["quantity"]
             new_order = order.objects.create(total_price=total_price, user=request.user)
-            new_payment=payment.objects.create(order=new_order,amount=new_order.total_price,status="pending")
+            new_payment = payment.objects.create(order=new_order, amount=new_order.total_price, status="pending")
             for item in data:
                 # product_obj = product.objects.get(id=item["product_id"])
                 product_obj = product_by_id[item["product_id"]]
@@ -228,12 +225,11 @@ def my_orders(request):
 def order_details(request, order_id):
     select_order = get_object_or_404(order, id=order_id, user=request.user)
 
-
     order_item = orderitem.objects.filter(order=select_order)
     context = {
-    "order": select_order,
-    "order_item": order_item
-   }
+        "order": select_order,
+        "order_item": order_item
+    }
     return render(request, "store/orderdetail.html", context)
 
 
@@ -255,16 +251,21 @@ def start_payment(request, order_id):
         payment_status = "پرداخت شده"
     elif select_payment.status == "failed":
         payment_status = "پرداخت ناموفق"
-    context={
-        "order":select_order,
-        "payment":select_payment,
-        "payment_status":payment_status
+    context = {
+        "order": select_order,
+        "payment": select_payment,
+        "payment_status": payment_status
     }
-    if request.method=="POST":
-        select_payment.status="paid"
-        select_payment.save()
-        messages.success(request,"سفارش شما با موفقیت پرداخت گردید")
-    return  render(request,"store/payment.html",context)
-
+    url_redirect = reverse("start_payment",  kwargs={"order_id": order_id})
+    if request.method == "POST":
+        if select_payment.status == "paid":
+            messages.warning(request, "این سفارش قبلا پرداخت شده است")
+            return redirect(url_redirect)
+        else:
+            select_payment.status = "paid"
+            select_payment.save()
+            messages.success(request, "سفارش شما با موفقیت پرداخت گردید")
+            return redirect(url_redirect)
+    return render(request, "store/payment.html", context)
 
     # در مرحله بعد، اینجا کاربر را به درگاه می‌فرستیم

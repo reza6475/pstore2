@@ -13,5 +13,5 @@ urlpatterns=[
     path("account/",views.account),
     path("myorders/",views.my_orders),
     path("myorders/<int:order_id>/",views.order_details),
-    path("myorder/<int:order_id>/payment/",views.start_payment)
+    path("myorder/<int:order_id>/payment/",views.start_payment,name="start_payment")
 ]
