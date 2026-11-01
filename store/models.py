@@ -50,10 +50,22 @@ class orderitem(models.Model):
 
 
 class payment(models.Model):
-    order = models.OneToOneField(
+    order = models.ForeignKey(
         order,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="payments"
     )
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
+    authority = models.CharField(
+        max_length=100,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    ref_id = models.PositiveBigIntegerField(
+        null=True,
+        blank=True
+    )

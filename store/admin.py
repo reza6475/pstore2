@@ -68,7 +68,7 @@ class OrderAdmin(JalaliDateAdminMixin, admin.ModelAdmin):
     readonly_fields = ("total_price","created_at")
     ordering = ("-created_at",)
     search_fields = ("user__username",)
-    list_filter = ("created_at",)
+    # list_filter = ("created_at",)
     list_filter = (OrderDateRangeFilter,)
 
 

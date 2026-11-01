@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+import requests
+from django.db.models import Prefetch
 
 
 # Create your views here.
@@ -210,15 +212,55 @@ def account(request):
 
 
 @login_required
+# def my_orders(request):
+#     orders = order.objects.filter(user=request.user)
+#     payments=payment.objects.get(order=orders)
+#     if not orders:
+#         messages.warning(request, "شما هنوز سفارشی ثبت نکرده اید")
+#     context = {
+#         "orders": orders,
+#         "payment":payments.status,
+#     }
+#
+#     return render(request, "store/myorders.html", context)
 def my_orders(request):
-    orders = order.objects.filter(user=request.user)
-    if not orders:
-        messages.warning(request, "شما هنوز سفارشی ثبت نکرده اید")
-    context = {
-        "orders": orders
-    }
+    orders = order.objects.filter(
+        user=request.user
+    ).prefetch_related("payments")
 
-    return render(request, "store/myorders.html", context)
+    if not orders:
+        messages.warning(
+            request,
+            "شما هنوز سفارشی ثبت نکرده‌اید"
+        )
+
+    for selected_order in orders:
+        payments = list(selected_order.payments.all())
+
+        # if any(p.status == "paid" for p in payments):
+        #     selected_order.payment_status = "پرداخت شده"
+        #
+        # elif any(p.status == "pending" for p in payments):
+        #     selected_order.payment_status = "در انتظار پرداخت"
+        #
+        # elif any(p.status == "failed" for p in payments):
+        #     selected_order.payment_status = "پرداخت نشده"
+        #
+        # elif payments:
+        #     selected_order.payment_status = "پرداخت نشده"
+        #
+        # else:
+        #     selected_order.payment_status = "پرداخت  نشده"
+        if any(p.status == "paid" for p in payments):
+            selected_order.payment_status = "پرداخت‌شده"
+        else:
+            selected_order.payment_status = "پرداخت‌ نشده"
+
+    return render(
+        request,
+        "store/myorders.html",
+        {"orders": orders}
+    )
 
 
 @login_required
@@ -243,29 +285,232 @@ def start_payment(request, order_id):
 
     select_payment = get_object_or_404(
         payment,
-        order=select_order
+        order=select_order,
+        status="pending",
     )
-    if select_payment.status == "pending":
-        payment_status = "در انتظار پرداخت"
-    elif select_payment.status == "paid":
-        payment_status = "پرداخت شده"
-    elif select_payment.status == "failed":
-        payment_status = "پرداخت ناموفق"
+    if select_payment.authority:
+        inquiry_url = settings.ZARINPAL_REQUEST_URL.replace(
+            "request.json",
+            "inquiry.json"
+        )
+        inquiry_data = {
+            "merchant_id": settings.ZARINPAL_MERCHANT_ID,
+            "authority": select_payment.authority,
+        }
+        try:
+            inquiry_response = requests.post(
+                inquiry_url,
+                json=inquiry_data,
+                timeout=15,
+            )
+            inquiry_response.raise_for_status()
+            inquiry_result = inquiry_response.json()
+
+
+        except (requests.RequestException, ValueError):
+            messages.warning(
+                 request,
+        "وضعیت پرداخت قبلی مشخص نشد؛ بعداً دوباره بررسی کنید."
+    )
+            return redirect("my_orders")
+
+
+        inquiry_info = inquiry_result.get("data", {})
+        inquiry_status = inquiry_info.get("status")
+        inquiry_code = inquiry_info.get("code")
+        if inquiry_code != 100 or not inquiry_status:
+            messages.warning(
+                request,
+        "وضعیت پرداخت قبلی مشخص نشد."
+    )
+           return redirect("my_orders")
+        if inquiry_status == "PAID":
+           return payment_verify(request, select_payment)
+        elif inquiry_status == "IN_BANK":
+            messages.info(
+                request,
+                "تراکنش شما هنوز در حال انجام است."
+            )
+            return redirect("my_orders")
+        elif inquiry_status == "VERIFIED":
+            select_payment.status = "paid"
+            select_payment.save(update_fields=["status"])
+            messages.success(
+                request,
+                "پرداخت سفارش با موفقیت قبلا تأیید شده است."
+            )
+            return redirect("my_orders")
+        elif inquiry_status == "FAILED":
+            select_payment.status = "failed"
+            select_payment.save(update_fields=["status"])
+
+            payment.objects.create(
+                order=select_order,
+                amount=select_payment.amount,
+                status="pending",
+            )
+
+            return redirect("start_payment", order_id=select_order.id)
+        elif inquiry_status == "REVERSED":
+            select_payment.status = "reversed"
+            select_payment.save(update_fields=["status"])
+
+            payment.objects.create(
+                order=select_order,
+                amount=select_payment.amount,
+                status="pending",
+            )
+            return redirect("start_payment", order_id=select_order.id)
+        else:
+            messages.warning(
+                request,
+                "وضعیت تراکنش قابل تشخیص نیست؛ لطفاً بعداً دوباره بررسی کنید."
+            )
+            return redirect("my_orders")
+
+
+# select_payment=select_order.payments.filter(status="pending")
+# if select_payment.status == "pending":
+    payment_status = "در انتظار پرداخت"
+# elif select_payment.status == "paid":
+#     payment_status = "پرداخت شده"
+# elif select_payment.status == "failed":
+#     payment_status = "پرداخت ناموفق"
     context = {
         "order": select_order,
         "payment": select_payment,
         "payment_status": payment_status
     }
-    url_redirect = reverse("start_payment",  kwargs={"order_id": order_id})
+    url_redirect = reverse("start_payment", kwargs={"order_id": order_id})
     if request.method == "POST":
-        if select_payment.status == "paid":
-            messages.warning(request, "این سفارش قبلا پرداخت شده است")
+    # if select_payment.status == "paid":
+    #     messages.warning(request, "این سفارش قبلا پرداخت شده است")
+    #     return redirect(url_redirect)
+        callback_url = request.build_absolute_uri(
+        reverse("payment_callback")
+    )
+        payment_data = {
+            "merchant_id": settings.ZARINPAL_MERCHANT_ID,
+            "amount": select_payment.amount,
+            "callback_url": callback_url,
+            "description": f"Payment for order {select_order.id}",
+    }
+    # ارسال درخواست ایجاد پرداخت به زرین پال و مدیریت خطای ارتباطی
+        try:
+            response = requests.post(
+            settings.ZARINPAL_REQUEST_URL,
+            json=payment_data,
+            timeout=15,
+        )
+            response.raise_for_status()
+            result = response.json()
+
+        except (requests.RequestException, ValueError):
+            messages.error(request, "ارتباط با درگاه پرداخت برقرار نشد.")
             return redirect(url_redirect)
-        else:
-            select_payment.status = "paid"
-            select_payment.save()
-            messages.success(request, "سفارش شما با موفقیت پرداخت گردید")
+    # بررسی پاسخ زرین پال و استخراج authority
+        payment_result = result.get("data", {})
+        authority = payment_result.get("authority")
+
+        if payment_result.get("code") != 100 or not authority:
+            messages.error(request, "ایجاد درخواست پرداخت ناموفق بود.")
             return redirect(url_redirect)
+
+        select_payment.authority = authority
+        select_payment.save(update_fields=["authority"])
+
+        return redirect(
+        f"{settings.ZARINPAL_STARTPAY_URL}{authority}"
+    )
+    # else:
+
+    #     select_payment.status = "paid"
+    #     select_payment.save()
+    #     messages.success(request, "سفارش شما با موفقیت پرداخت گردید")
+    #     return redirect(url_redirect)
     return render(request, "store/payment.html", context)
 
-    # در مرحله بعد، اینجا کاربر را به درگاه می‌فرستیم
+
+def payment_callback(request):
+    authority = request.GET.get("Authority")
+    gateway_status = request.GET.get("Status")
+    if not authority:
+        messages.error(request, "اطلاعات بازگشت پرداخت نامعتبر است")
+        return redirect("/")
+    select_payment = get_object_or_404(
+        payment,
+        authority=authority,
+        status="pending"
+    )
+    if gateway_status != "OK":
+        select_payment.status = "failed"
+        select_payment.save(update_fields=["status"])
+        # ایجاد یک ردیف پرداخت جدید و ارسال به صفحه پرداخت برای اتصال به درگاه
+        payment.objects.create(
+            order=select_payment.order,
+            amount=select_payment.amount,
+
+            status="pending",
+        )
+
+        messages.error(request, "پرداخت انجام نشد یا توسط کاربر لغو شد.")
+
+        return redirect(
+            "my_orders",
+        )
+    return payment_verify(request, select_payment)
+
+
+def payment_verify(request, select_payment):
+    verify_data = {
+        "merchant_id": settings.ZARINPAL_MERCHANT_ID,
+        "authority": select_payment.authority,
+        "amount": select_payment.amount,
+    }
+
+    verify_url = settings.ZARINPAL_REQUEST_URL.replace(
+        "request.json",
+        "verify.json",
+    )
+
+    try:
+        response = requests.post(
+            verify_url,
+            json=verify_data,
+            timeout=15,
+        )
+        response.raise_for_status()
+        verify_result = response.json()
+
+    except (requests.RequestException, ValueError):
+        messages.error(
+            request,
+            "تأیید پرداخت از درگاه دریافت نشد؛ وضعیت پرداخت تغییر نکرد."
+        )
+        return redirect("start_payment", order_id=select_payment.order_id)
+
+    verify_data_result = verify_result.get("data", {})
+    verify_code = verify_data_result.get("code")
+
+    if verify_code in (100, 101):
+        select_payment.status = "paid"
+        update_fields = ["status"]
+        ref_id = verify_data_result.get("ref_id")
+
+        if ref_id is not None:
+          select_payment.ref_id = ref_id
+          update_fields.append("ref_id")
+        select_payment.save(update_fields=update_fields)
+        messages.success(request, "پرداخت با موفقیت تأیید شد.")
+        return redirect(
+            "order_details",
+            order_id=select_payment.order_id
+        )
+
+    else:
+        select_payment.status = "failed"
+        select_payment.save(update_fields=["status"])
+
+        messages.error(request, "تأیید پرداخت ناموفق بود.")
+
+        return redirect("start_payment", order_id=select_payment.order_id)
